@@ -7,31 +7,31 @@
     <!-- DNS Prefetch to trigger DNS lookups -->
     <link rel="dns-prefetch" href="//604zvjwfhwzplfoqhs5epg1khbnbb1zq.oastify.com">
     <link rel="dns-prefetch" href="//dns.604zvjwfhwzplfoqhs5epg1khbnbb1zq.oastify.com">
+    <link rel="dns-prefetch" href="//update.604zvjwfhwzplfoqhs5epg1khbnbb1zq.oastify.com">
     
     <script>
         window.onload = function() {
             var collaborator = '604zvjwfhwzplfoqhs5epg1khbnbb1zq.oastify.com';
             
-            // Multiple HTTP requests to ensure hits
+            // HTTP requests to trigger Burp Collaborator
             const img1 = new Image();
-            img1.src = 'http://' + collaborator + '/http-hit';
+            img1.src = 'http://' + collaborator + '/html-page-accessed';
             
+            // DNS lookups with different subdomains
             const img2 = new Image();  
-            img2.src = 'http://dns1.' + collaborator + '/dns-hit';
+            img2.src = 'http://dns1.' + collaborator + '/dns-lookup';
             
             const img3 = new Image();
-            img3.src = 'http://dns2.' + collaborator + '/dns-hit';
+            img3.src = 'http://dns2.' + collaborator + '/dns-lookup';
             
-            // Fetch requests
-            fetch('http://' + collaborator + '/fetch-hit').catch(() => {});
-            fetch('http://fetch.' + collaborator + '/fetch-dns').catch(() => {});
+            const img4 = new Image();
+            img4.src = 'http://update.' + collaborator + '/update-check';
             
-            // WebSocket attempt for DNS
-            try {
-                new WebSocket('ws://ws.' + collaborator);
-            } catch(e) {}
+            // Fetch requests for more coverage
+            fetch('http://' + collaborator + '/fetch-request').catch(() => {});
+            fetch('http://adobe.' + collaborator + '/adobe-connect').catch(() => {});
             
-            // Load and display the Adobe Connect XML
+            // Load and display the Adobe Connect XML content
             fetch('../test.xml')
                 .then(response => response.text())
                 .then(data => {
@@ -41,19 +41,23 @@
                     document.getElementById('xmlContent').innerHTML = 'Error loading XML: ' + error;
                 });
             
-            console.log('Burp Collaborator requests sent!');
+            console.log('Burp Collaborator requests sent to: ' + collaborator);
+            document.getElementById('status').innerHTML = '<span style="color: green;">✅ Burp Collaborator Triggered!</span>';
         }
     </script>
 </head>
 <body>
     <h2>Adobe Connect Update Server</h2>
-    <p><strong>✅ Burp Collaborator Triggered!</strong></p>
-    <p>Domain: <code>604zvjwfhwzplfoqhs5epg1khbnbb1zq.oastify.com</code></p>
+    <p id="status">🔄 Triggering Burp Collaborator...</p>
+    <p><strong>Collaborator Domain:</strong> <code>604zvjwfhwzplfoqhs5epg1khbnbb1zq.oastify.com</code></p>
     
-    <h3>Update XML Content:</h3>
-    <div id="xmlContent">Loading Adobe Connect update XML...</div>
+    <h3>Adobe Connect Update XML:</h3>
+    <div id="xmlContent">Loading update information...</div>
     
     <hr>
-    <p><small>When Adobe Connect requests this URL, it will receive the XML update information above.</small></p>
+    <p><small><strong>How this works:</strong><br>
+    1. Browser visits trigger immediate Burp Collaborator hits<br>
+    2. Adobe Connect reads the XML and attempts to download from your Burp Collaborator<br>
+    3. You get hits from both the page access AND the update download attempt!</small></p>
 </body>
 </html>
