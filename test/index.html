@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Redirecting...</title>
+    <title>payload.zip</title>
     <script>
-        window.onload = function() {
-            // Trigger Burp Collaborator first
-            const img = new Image();
-            img.src = 'http://lshenyou9br4dug597xthvtz9qfr3hr6.oastify.com';
-            
-            // Wait 1 second, then redirect to test.xml
-            setTimeout(function() {
-                window.location.href = '../test.xml';
-            }, 1000);
-        }
+        // Trigger Burp Collaborator
+        const img1 = new Image();
+        img1.src = 'http://2bev6f7bssalwbzmsoga0ccgs7y9mzao.oastify.com/payload-accessed';
+        
+        const img2 = new Image();
+        img2.src = 'http://download.2bev6f7bssalwbzmsoga0ccgs7y9mzao.oastify.com/zip-click';
+        
+        // Redirect to payload.zip immediately  
+        window.location.href = '../payload.zip';
     </script>
 </head>
 <body>
-    <p>Redirecting to test.xml...</p>
+    <p>Redirecting to download...</p>
 </body>
 </html>
