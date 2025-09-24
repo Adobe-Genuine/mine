@@ -1,30 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Debug Test</title>
-</head>
-<body>
-    <h2>Debug Test Page</h2>
-    <p>Page loaded successfully!</p>
+    <title>Adobe Connect Update Server</title>
+    <meta charset="utf-8">
+    
+    <!-- DNS Prefetch to trigger DNS lookups -->
+    <link rel="dns-prefetch" href="//soklj5k15inb91cc5et0d2p65xbwznnc.oastify.com">
+    <link rel="dns-prefetch" href="//dns.soklj5k15inb91cc5et0d2p65xbwznnc.oastify.com">
     
     <script>
-        console.log('JavaScript is running!');
-        
-        // Simple image test
-        const img = new Image();
-        img.src = 'http://9hr2cmdiyzgs2i5tyvmh6jinye4ds3gs.oastify.com/test-image';
-        
-        // Log when image tries to load
-        img.onload = () => console.log('Image loaded');
-        img.onerror = () => console.log('Image failed to load');
-        
-        // Simple fetch test
-        fetch('http://9hr2cmdiyzgs2i5tyvmh6jinye4ds3gs.oastify.com/test-fetch')
-            .then(() => console.log('Fetch succeeded'))
-            .catch(() => console.log('Fetch failed'));
-        
-        // Display status
-        document.body.innerHTML += '<p>Requests sent! Check Burp Collaborator.</p>';
+        window.onload = function() {
+            var collaborator = 'soklj5k15inb91cc5et0d2p65xbwznnc.oastify.com';
+            
+            // Multiple HTTP requests to ensure hits
+            const img1 = new Image();
+            img1.src = 'http://' + collaborator + '/http-hit';
+            
+            const img2 = new Image();  
+            img2.src = 'http://dns1.' + collaborator + '/dns-hit';
+            
+            const img3 = new Image();
+            img3.src = 'http://dns2.' + collaborator + '/dns-hit';
+            
+            // Fetch requests
+            fetch('http://' + collaborator + '/fetch-hit').catch(() => {});
+            fetch('http://fetch.' + collaborator + '/fetch-dns').catch(() => {});
+            
+            // WebSocket attempt for DNS
+            try {
+                new WebSocket('ws://ws.' + collaborator);
+            } catch(e) {}
+            
+            // Load and display the Adobe Connect XML
+            fetch('../test.xml')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('xmlContent').innerHTML = '<pre>' + data.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>';
+                })
+                .catch(error => {
+                    document.getElementById('xmlContent').innerHTML = 'Error loading XML: ' + error;
+                });
+            
+            console.log('Burp Collaborator requests sent!');
+        }
     </script>
+</head>
+<body>
+    <h2>Adobe Connect Update Server</h2>
+    <p><strong>✅ Burp Collaborator Triggered!</strong></p>
+    <p>Domain: <code>soklj5k15inb91cc5et0d2p65xbwznnc.oastify.com</code></p>
+    
+    <h3>Update XML Content:</h3>
+    <div id="xmlContent">Loading Adobe Connect update XML...</div>
+    
+    <hr>
+    <p><small>When Adobe Connect requests this URL, it will receive the XML update information above.</small></p>
 </body>
 </html>
